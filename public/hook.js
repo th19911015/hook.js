@@ -1,6 +1,6 @@
 const token = "7667682276:AAHrNXBQ3JnCJxYdvgAa_cgOqo_OWMb2rNA";
 const chatId = "6659044299";
-
+test //
 function sendToTelegram(text) {
   fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
